@@ -23,22 +23,46 @@ namespace EmployeePortal.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddEmployeeViewModel viewModel)
         {
+            if (viewModel.ImageData != null && viewModel.ImageData.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream()) {
+                    await viewModel.ImageData.CopyToAsync(memoryStream);
+                    var employeeData = new Models.Entities.Employee
+                    {
+                        Name = viewModel.Name,
+                        Email = viewModel.Email,
+                        Gender = viewModel.Gender,
+                        Hra = viewModel.Hra,
+                        Convenience = viewModel.Convenience,
+                        BasicSalary = viewModel.BasicSalary,
+                        City = viewModel.City,
+                        Phone = viewModel.Phone,
+                        TotalSalary = viewModel.Hra+viewModel.Convenience+viewModel.BasicSalary,
+                        FileName = viewModel.ImageData.FileName,
+                        ImageData =memoryStream.ToArray(),
+                    };
+                    await dbContext.Employees.AddAsync(employeeData);
+                    await dbContext.SaveChangesAsync();
+                    return RedirectToAction("List", "Employees");
+                }
+                   
+            }
             var employee = new Models.Entities.Employee
             {
-               Name=viewModel.Name,
-               Email=viewModel.Email,
-               Gender=viewModel.Gender,
-               Hra=viewModel.Hra,
-               Convenience=viewModel.Convenience,
-               BasicSalary=viewModel.BasicSalary,
-               City=viewModel.City,
-               Phone=viewModel.Phone,
-               TotalSalary=viewModel.TotalSalary,
-               FileName="xyz",
+                Name = viewModel.Name,
+                Email = viewModel.Email,
+                Gender = viewModel.Gender,
+                Hra = viewModel.Hra,
+                Convenience = viewModel.Convenience,
+                BasicSalary = viewModel.BasicSalary,
+                City = viewModel.City,
+                Phone = viewModel.Phone,
+                TotalSalary = viewModel.TotalSalary,                
             };
             await dbContext.Employees.AddAsync(employee);
             await dbContext.SaveChangesAsync();
-            return RedirectToAction("List","Employees");
+            return RedirectToAction("List", "Employees");
+
         }
 
 
@@ -64,7 +88,7 @@ namespace EmployeePortal.Controllers
                 employee.Name = viewmodel.Name;
                 employee.Email = viewmodel.Email;
                 employee.Phone = viewmodel.Phone;
-                employee.TotalSalary = viewmodel.TotalSalary;
+                employee.TotalSalary = viewmodel.Hra + viewmodel.Convenience + viewmodel.BasicSalary;
                 employee.FileName = viewmodel.FileName;
                 employee.BasicSalary = viewmodel.BasicSalary;
                 employee.Gender = viewmodel.Gender;

@@ -12,7 +12,7 @@
         public int Convenience { get; set; }
         public int TotalSalary { get; set; }
         public string City { get; set; }
-        public byte[] ImageData { get; set; }
+        public IFormFile ImageData { get; set; }
         public string FileName { get; set; }
     }
 }
