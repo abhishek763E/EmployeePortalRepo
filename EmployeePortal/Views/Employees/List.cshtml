@@ -11,8 +11,14 @@
     <tr>
     <th>id</th>
     <th>name</th>
+    <th>gender</th>
     <th>email</th>
     <th>phone</th>
+    <th>basicsalary</th>
+    <th>hra</th>
+    <th>convinience</th>
+     <th>totalsalary</th>
+     <th>city</th>
     </tr>
     </thead>
     <tbody>
@@ -21,8 +27,14 @@
                 <tr>
                     <td>@employee.Id</td>
                     <td>@employee.Name</td>
+                    <td>@employee.Gender</td>
                     <td>@employee.Email</td>
                     <td>@employee.Phone</td>
+                    <td>@employee.BasicSalary</td>
+                    <td>@employee.Hra</td>
+                    <td>@employee.Convenience</td>
+                    <td>@employee.TotalSalary</td>
+                    <td>@employee.City</td>
                     <td>
                         <a  asp-controller="Employees" asp-action="Edit" asp-route-id="@employee.Id">Edit</a>
                     </td>

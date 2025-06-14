@@ -50,7 +50,7 @@ namespace EmployeePortal.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(int id)
         {
             var employee =await dbContext.Employees.FindAsync(id);
             return View(employee);
