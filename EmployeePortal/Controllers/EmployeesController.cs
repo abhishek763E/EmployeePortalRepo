@@ -80,10 +80,33 @@ namespace EmployeePortal.Controllers
             return View(employee);
         }
         [HttpPost]
-        public async Task<IActionResult> Edit(Employee viewmodel)
+        public async Task<IActionResult> Edit(AddEmployeeViewModel viewmodel)
         {
            var employee = await dbContext.Employees.FindAsync(viewmodel.Id);
-            if(employee is not null)
+            if (viewmodel.ImageData != null && viewmodel.ImageData.Length > 0) {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await viewmodel.ImageData.CopyToAsync(memoryStream);
+                    if (employee is not null)
+                    {
+                        employee.Name = viewmodel.Name;
+                        employee.Email = viewmodel.Email;
+                        employee.Phone = viewmodel.Phone;
+                        employee.TotalSalary = viewmodel.Hra + viewmodel.Convenience + viewmodel.BasicSalary;
+                        employee.FileName = viewmodel.FileName;
+                        employee.BasicSalary = viewmodel.BasicSalary;
+                        employee.Gender = viewmodel.Gender;
+                        employee.City = viewmodel.City;
+                        employee.Convenience = viewmodel.Convenience;
+                        employee.Hra = viewmodel.Hra;
+                        employee.FileName= viewmodel.FileName;
+                        employee.ImageData= memoryStream.ToArray();
+                        await dbContext.SaveChangesAsync();
+                    }
+                    return RedirectToAction("List", "Employees");
+                };
+            }
+            if (employee is not null)
             {
                 employee.Name = viewmodel.Name;
                 employee.Email = viewmodel.Email;
@@ -94,12 +117,12 @@ namespace EmployeePortal.Controllers
                 employee.Gender = viewmodel.Gender;
                 employee.City = viewmodel.City;
                 employee.Convenience = viewmodel.Convenience;
-                employee.Hra=viewmodel.Hra;
+                employee.Hra = viewmodel.Hra;
                 await dbContext.SaveChangesAsync();
             }
             return RedirectToAction("List", "Employees");
 
-        }
+        }     
 
         [HttpPost]
         public async Task<IActionResult>Delete(Employee viewModel)
